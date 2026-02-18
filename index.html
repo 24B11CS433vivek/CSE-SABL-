@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSE Events Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080808;--w:#f5f5f0;--g:#888;--bd:rgba(255,255,255,0.1);--bh:rgba(255,255,255,0.22);--sf:rgba(255,255,255,0.04);--sh:rgba(255,255,255,0.07);--gr:#6fcf97;--rd:#eb5757;--fd:'Playfair Display',serif;--fb:'DM Sans',sans-serif}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--w);font-family:var(--fb);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:4px}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:70px 70px;pointer-events:none;z-index:0}
+.page{display:none;position:relative;z-index:1;min-height:100vh}
+.page.active{display:block}
+#pg-login.active{display:flex;align-items:center;justify-content:center}
+#pg-login{min-height:100vh;padding:30px 16px}
+.lbox{width:100%;max-width:420px}
+.llogo{text-align:center;margin-bottom:38px}
+.lchip{display:inline-block;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--g);border:1px solid var(--bd);padding:5px 16px;margin-bottom:16px}
+.llogo h1{font-family:var(--fd);font-size:2.8rem;font-weight:900;line-height:1;letter-spacing:-1px}
+.llogo h1 em{font-style:italic;color:var(--g)}
+.llogo p{color:var(--g);font-size:13px;margin-top:7px}
+.lcard{background:rgba(255,255,255,0.04);border:1px solid var(--bd);border-radius:6px;padding:32px}
+.tabs{display:flex;border-bottom:1px solid var(--bd);margin-bottom:24px}
+.tab{flex:1;background:none;border:none;border-bottom:2px solid transparent;color:var(--g);padding:10px 0;font-family:var(--fb);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;transition:.2s;margin-bottom:-1px}
+.tab.on{color:var(--w);border-bottom-color:var(--w)}
+.tp{display:none}.tp.on{display:block}
+.sblurb{text-align:center;color:var(--g);font-size:13px;line-height:1.8;margin-bottom:22px}
+.sblurb strong{color:var(--w);display:block;font-size:15px;margin-bottom:3px}
+.ebox{background:rgba(235,87,87,0.1);border:1px solid rgba(235,87,87,0.3);color:#ff9090;padding:10px 14px;border-radius:4px;font-size:13px;margin-bottom:14px;display:none}
+.ebox.show{display:block}
+#nav{position:sticky;top:0;z-index:900;background:rgba(8,8,8,0.93);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);height:60px;display:none;align-items:center;justify-content:space-between;padding:0 32px;gap:16px}
+#nav.on{display:flex}
+.brand{font-family:var(--fd);font-size:1.2rem;font-weight:900;cursor:pointer;white-space:nowrap}
+.brand em{font-style:italic;color:var(--g)}
+.nl{display:flex;gap:2px;list-style:none}
+.nl button{background:none;border:none;color:var(--g);font-family:var(--fb);font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:6px 13px;cursor:pointer;border-radius:3px;transition:.2s}
+.nl button:hover,.nl button.on{color:var(--w);background:var(--sh)}
+.navr{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.rbadge{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--g);border:1px solid var(--bd);padding:4px 12px}
+.nbtn{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--g);border:1px solid var(--bd);background:none;padding:5px 13px;cursor:pointer;transition:.2s;font-family:var(--fb)}
+.nbtn:hover{color:var(--w);border-color:var(--bh)}
+.wrap{max-width:1160px;margin:0 auto;padding:40px 32px 80px}
+.ey{display:inline-block;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--g);border:1px solid var(--bd);padding:4px 12px;margin-bottom:12px}
+.pt{font-family:var(--fd);font-size:2.4rem;font-weight:900;line-height:1;letter-spacing:-1px;margin-bottom:8px}
+.ps{color:var(--g);font-size:14px;margin-bottom:30px}
+.sdiv{display:flex;align-items:center;gap:14px;margin:34px 0 20px}
+.sdiv h2{font-family:var(--fd);font-size:1rem;font-weight:700;white-space:nowrap}
+.sdiv::after{content:'';flex:1;height:1px;background:var(--bd)}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--g);margin-bottom:6px}
+.fg input,.fg textarea,.fg select{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:3px;padding:10px 13px;color:var(--w);font-family:var(--fb);font-size:14px;outline:none;transition:border-color .2s}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:rgba(255,255,255,0.35)}
+.fg textarea{resize:vertical;min-height:72px}
+.fg select option{background:#1a1a1a}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cbw{display:flex;align-items:center;gap:9px;margin-bottom:14px}
+.cbw input[type=checkbox]{width:15px;height:15px;accent-color:var(--w);cursor:pointer;flex-shrink:0}
+.cbw label{font-size:13px;color:var(--w);cursor:pointer;margin:0}
+@media(max-width:700px){.fr2{grid-template-columns:1fr}}
+/* PHOTO UPLOAD */
+.pu-label{display:block;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--g);margin-bottom:6px}
+.photo-drop{border:1px dashed rgba(255,255,255,0.18);border-radius:4px;padding:22px;text-align:center;cursor:pointer;background:rgba(255,255,255,0.03);position:relative;overflow:hidden;transition:.2s;margin-bottom:14px}
+.photo-drop:hover{border-color:rgba(255,255,255,0.38);background:rgba(255,255,255,0.055)}
+.photo-drop input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.photo-drop .ico{font-size:1.6rem;margin-bottom:6px;opacity:.45;pointer-events:none}
+.photo-drop .txt{font-size:12px;color:var(--g);pointer-events:none}
+.photo-drop .txt strong{color:rgba(255,255,255,0.45)}
+.photo-prev{position:relative;margin-bottom:14px;display:none}
+.photo-prev img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:4px;border:1px solid var(--bd);display:block}
+.photo-prev .rm{position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.82);border:1px solid rgba(255,255,255,0.18);color:var(--w);font-size:10px;padding:4px 10px;border-radius:3px;cursor:pointer;font-family:var(--fb);letter-spacing:1px;text-transform:uppercase;transition:.2s}
+.photo-prev .rm:hover{background:rgba(235,87,87,0.85)}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 22px;border:none;border-radius:3px;font-family:var(--fb);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:.2s;text-decoration:none;white-space:nowrap;vertical-align:middle}
+.bp{background:var(--w);color:#000}.bp:hover{background:#ddd;transform:translateY(-1px)}
+.bo{background:transparent;color:var(--w);border:1px solid var(--bd)}.bo:hover{border-color:var(--bh);background:var(--sh)}
+.bd{background:transparent;color:var(--rd);border:1px solid rgba(235,87,87,0.35)}.bd:hover{background:rgba(235,87,87,0.1)}
+.bsm{padding:6px 13px;font-size:10px;letter-spacing:1.5px}
+.blg{padding:13px 30px;font-size:12px}
+.bfw{width:100%;justify-content:center}
+.panel{background:var(--sf);border:1px solid var(--bd);border-radius:4px;padding:24px;margin-bottom:20px;transition:border-color .2s}
+.panel:hover{border-color:var(--bh)}
+.ptop{font-family:var(--fd);font-size:1rem;font-weight:700;margin-bottom:16px}
+#toasts{position:fixed;top:70px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:7px;pointer-events:none}
+.toast{background:rgba(14,14,14,0.97);border:1px solid rgba(255,255,255,0.14);color:var(--w);padding:11px 17px;font-size:13px;border-radius:4px;min-width:220px;animation:tin .3s ease,tout .35s ease 2.7s forwards;pointer-events:auto}
+.ts{border-left:3px solid var(--gr)}.te{border-left:3px solid var(--rd)}
+@keyframes tin{from{transform:translateX(14px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes tout{to{opacity:0;transform:translateX(14px)}}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:8000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(5px);padding:20px}
+.ov.open{display:flex}
+.modal{background:#111;border:1px solid rgba(255,255,255,0.14);border-radius:6px;padding:28px;width:100%;max-width:520px;position:relative;max-height:90vh;overflow-y:auto}
+.mt{font-family:var(--fd);font-size:1.2rem;margin-bottom:7px}
+.ms{color:var(--g);font-size:13px;margin-bottom:20px}
+.ma{display:flex;gap:10px;justify-content:flex-end;margin-top:6px}
+.mc{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--g);font-size:22px;cursor:pointer;line-height:1;transition:.2s}
+.mc:hover{color:var(--w)}
+.hero{text-align:center;padding:56px 16px 40px}
+.hero .chip{display:inline-block;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--g);border:1px solid var(--bd);padding:5px 16px;margin-bottom:18px}
+.hero h1{font-family:var(--fd);font-size:clamp(2.6rem,7vw,4.5rem);font-weight:900;line-height:1;letter-spacing:-2px;margin-bottom:11px}
+.hero h1 em{font-style:italic;color:var(--g)}
+.hero p{color:var(--g);font-size:14px;max-width:380px;margin:0 auto 26px;line-height:1.7}
+.srch{max-width:440px;margin:0 auto;position:relative}
+.srch input{width:100%;background:rgba(255,255,255,0.055);border:1px solid var(--bd);border-radius:4px;padding:12px 18px 12px 42px;color:var(--w);font-family:var(--fb);font-size:14px;outline:none;transition:.2s}
+.srch input:focus{border-color:rgba(255,255,255,0.28)}
+.srch span{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--g);font-size:16px;pointer-events:none}
+.egrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;margin-bottom:48px}
+.ecard{background:var(--sf);border:1px solid var(--bd);border-radius:4px;overflow:hidden;cursor:pointer;transition:transform .3s,border-color .3s,box-shadow .3s}
+.ecard:hover{transform:translateY(-6px) scale(1.012);border-color:rgba(255,255,255,0.26);box-shadow:0 20px 56px rgba(0,0,0,0.6)}
+.eth{aspect-ratio:16/9;background:linear-gradient(135deg,#141414,#222);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.eth img.ev-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.ecard:hover .eth img.ev-img{transform:scale(1.05)}
+.etl{font-family:var(--fd);font-size:3.5rem;font-weight:900;color:rgba(255,255,255,0.07);user-select:none;position:relative;z-index:1}
+.eth img.ev-img~.etl{display:none}
+.etov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.72),transparent 55%);opacity:0;transition:.3s;z-index:2}
+.ecard:hover .etov{opacity:1}
+.etpl{position:absolute;bottom:12px;left:50%;transform:translateX(-50%) translateY(8px);opacity:0;background:rgba(255,255,255,0.92);color:#000;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:6px 16px;border-radius:2px;font-weight:700;transition:.3s;white-space:nowrap;z-index:3}
+.ecard:hover .etpl{opacity:1;transform:translateX(-50%) translateY(0)}
+.upb{position:absolute;top:11px;right:11px;background:var(--w);color:#000;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:3px 9px;font-weight:700;z-index:4}
+.einf{padding:14px 16px}
+.einf h3{font-family:var(--fd);font-size:.9rem;font-weight:700;margin-bottom:4px}
+.einf .meta{font-size:12px;color:var(--g)}
+.empty{grid-column:1/-1;text-align:center;padding:60px;color:var(--g)}
+.back{display:inline-flex;align-items:center;gap:7px;color:var(--g);font-size:11px;letter-spacing:2px;text-transform:uppercase;background:none;border:none;cursor:pointer;transition:.2s;margin-bottom:26px;font-family:var(--fb)}
+.back:hover{color:var(--w)}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:40px}
+@media(max-width:700px){.dgrid{grid-template-columns:1fr;gap:20px}}
+.dhero{aspect-ratio:16/9;background:linear-gradient(135deg,#181818,#282828);border-radius:4px;border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.dhero img{width:100%;height:100%;object-fit:cover}
+.dhero .big{font-family:var(--fd);font-size:5rem;font-weight:900;color:rgba(255,255,255,0.06)}
+.dinfo h1{font-family:var(--fd);font-size:2rem;font-weight:900;line-height:1.1;margin-bottom:11px}
+.dinfo p{color:#aaa;font-size:14px;line-height:1.75;margin-bottom:18px}
+.dmeta{display:flex;gap:22px;flex-wrap:wrap}
+.dmeta strong{display:block;font-size:15px;font-weight:600;margin-bottom:2px}
+.dmeta span{font-size:11px;color:var(--g);letter-spacing:1px;text-transform:uppercase}
+.btabs{display:flex;gap:2px;flex-wrap:wrap;border-bottom:1px solid var(--bd);margin-bottom:20px}
+.btab{background:none;border:none;border-bottom:2px solid transparent;color:var(--g);padding:9px 17px;font-family:var(--fb);font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:.2s;margin-bottom:-1px;font-weight:500}
+.btab.on{color:var(--w);border-bottom-color:var(--w)}
+.btab:hover{color:var(--w)}
+.bp2{display:none}.bp2.on{display:block}
+.ccard{background:var(--sf);border:1px solid var(--bd);border-radius:4px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;transition:.2s}
+.ccard:hover{border-color:var(--bh)}
+.ccard h4{font-family:var(--fd);font-size:.9rem;margin-bottom:3px}
+.ccard p{font-size:12px;color:var(--g)}
+.cact{display:flex;gap:7px;flex-shrink:0}
+.nocert{border:1px dashed rgba(255,255,255,0.1);border-radius:4px;padding:40px;text-align:center;color:var(--g);font-size:14px}
+.annc{background:var(--sf);border:1px solid var(--bd);border-radius:4px;padding:20px 24px;margin-bottom:12px;transition:.2s}
+.annc:hover{border-color:var(--bh)}
+.annc h3{font-family:var(--fd);font-size:.98rem;margin-bottom:7px}
+.annc p{font-size:13px;color:#aaa;line-height:1.7}
+.annc .dt{font-size:11px;color:var(--g);letter-spacing:1.5px;text-transform:uppercase;margin-top:11px}
+.hgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px}
+@media(max-width:700px){.hgrid{grid-template-columns:1fr}}
+.hcard{background:var(--sf);border:1px solid var(--bd);border-radius:4px;padding:24px}
+.hcard .ico{font-size:1.7rem;margin-bottom:11px}
+.hcard h3{font-family:var(--fd);font-size:.95rem;margin-bottom:11px}
+.crow{display:flex;gap:10px;margin-bottom:8px;font-size:13px}
+.crow .lb{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--g);min-width:76px;flex-shrink:0;padding-top:2px}
+.ibox{background:rgba(235,87,87,0.05);border:1px solid rgba(235,87,87,0.18);border-radius:4px;padding:24px}
+.ibox h3{font-family:var(--fd);font-size:1rem;margin-bottom:6px}
+.ibox p{color:#aaa;font-size:13px;line-height:1.7;margin-bottom:16px}
+.ibtns{display:flex;gap:11px;flex-wrap:wrap}
+.sw{max-width:560px;margin:0 auto;background:var(--sf);border:1px solid var(--bd);border-radius:4px;padding:34px}
+.sw h3{font-family:var(--fd);font-size:1.1rem;margin-bottom:5px}
+.sw p{color:var(--g);font-size:13px;margin-bottom:22px}
+.strow{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:15px;margin-bottom:32px}
+.stc{background:var(--sf);border:1px solid var(--bd);border-radius:4px;padding:22px;text-align:center;cursor:pointer;transition:.2s}
+.stc:hover{border-color:var(--bh);transform:translateY(-2px)}
+.stc .num{font-family:var(--fd);font-size:2.6rem;font-weight:900;line-height:1;margin-bottom:5px}
+.stc .lbl{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--g)}
+.qarow{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:12px}
+.qac{background:var(--sf);border:1px solid var(--bd);border-radius:4px;padding:18px 20px;display:flex;align-items:center;gap:13px;cursor:pointer;transition:.25s}
+.qac:hover{border-color:var(--bh);background:var(--sh);transform:translateX(4px)}
+.qac .qi{font-size:1.3rem;flex-shrink:0}
+.qac h4{font-size:13px;font-weight:500;margin-bottom:2px}
+.qac p{font-size:12px;color:var(--g)}
+.erow{display:flex;align-items:center;gap:13px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.erow:last-child{border-bottom:none}
+.ethm{width:58px;height:42px;border-radius:3px;background:#1a1a1a;border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:.95rem;font-weight:900;color:rgba(255,255,255,0.12);flex-shrink:0;overflow:hidden}
+.ethm img{width:100%;height:100%;object-fit:cover}
+.erinf{flex:1;min-width:0}
+.erinf .en{font-weight:500;font-size:13px;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.erinf .em{font-size:12px;color:var(--g)}
+.uch{display:inline-block;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;border:1px solid rgba(255,255,255,0.17);padding:1px 7px;color:var(--g);margin-left:7px;vertical-align:middle}
+.eract{display:flex;gap:6px;flex-shrink:0}
+/* DEPT SELECTOR */
+.dept-grid{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.dbtn{background:rgba(255,255,255,0.04);border:1px solid var(--bd);color:var(--g);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:6px 11px;cursor:pointer;border-radius:3px;transition:.2s;font-family:var(--fb)}
+.dbtn:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.25);color:var(--w)}
+.dbtn.sel{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.4);color:var(--w)}
+.dbtn.used{opacity:.38;cursor:not-allowed;pointer-events:none}
+/* CERT TABLE */
+.ctbl{width:100%;border-collapse:collapse;font-size:13px}
+.ctbl th{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--g);padding:8px 10px;border-bottom:1px solid var(--bd);text-align:left;font-weight:500}
+.ctbl td{padding:10px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle}
+.ctbl tr:last-child td{border-bottom:none}
+.dtag{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;background:rgba(255,255,255,0.07);border:1px solid var(--bd);padding:2px 8px;border-radius:2px;font-weight:600;white-space:nowrap}
+.lkcell{color:var(--g);font-size:12px;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.actcell{white-space:nowrap;text-align:right}
+.sr{background:var(--sf);border:1px solid var(--bd);border-radius:4px;padding:15px 18px;display:flex;align-items:flex-start;gap:13px;margin-bottom:8px;transition:.2s}
+.sr:hover{border-color:var(--bh)}
+.sb{flex:1}
+.sau{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--g);margin-bottom:5px}
+.stx{font-size:13px;color:#ccc;line-height:1.65}
+.sdt{font-size:11px;color:var(--g);margin-top:6px}
+@media(max-width:800px){#nav{padding:0 16px}.nl{display:none}.wrap{padding:24px 16px 60px}.dgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="toasts"></div>
+
+<!-- LOGIN -->
+<div id="pg-login" class="page active">
+  <div class="lbox">
+    <div class="llogo">
+      <div class="lchip">Department Portal</div>
+      <h1>CSE <em>Events</em></h1>
+      <p>Computer Science &amp; Engineering</p>
+    </div>
+    <div class="lcard">
+      <div id="lerr" class="ebox">&#9888; Invalid username or password</div>
+      <div class="tabs">
+        <button class="tab on" onclick="ltab('s',this)">Student</button>
+        <button class="tab" onclick="ltab('a',this)">Admin</button>
+      </div>
+      <div id="tp-s" class="tp on">
+        <div class="sblurb"><strong>Welcome, Student</strong>Access events, download certificates, view announcements. No password needed.</div>
+        <button class="btn bp blg bfw" onclick="loginS()">Enter as Student &#8594;</button>
+      </div>
+      <div id="tp-a" class="tp">
+        <div class="fg"><label>Username</label><input id="au" type="text" placeholder="Username" onkeydown="if(event.key==='Enter')loginA()"></div>
+        <div class="fg"><label>Password</label><input id="ap" type="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" onkeydown="if(event.key==='Enter')loginA()"></div>
+        <button class="btn bp bfw" style="margin-top:4px" onclick="loginA()">Login as Admin</button>
+        <p style="text-align:center;margin-top:11px;font-size:12px;color:var(--g)">Only admins are allowed to login.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav id="nav">
+  <div class="brand" onclick="gohome()">CSE <em>Events</em></div>
+  <ul class="nl" id="snl">
+    <li><button onclick="go('home')" data-p="home">Events</button></li>
+    <li><button onclick="go('ann')" data-p="ann">Announcements</button></li>
+    <li><button onclick="go('help')" data-p="help">Help</button></li>
+    <li><button onclick="go('sugg')" data-p="sugg">Suggestions</button></li>
+  </ul>
+  <ul class="nl" id="anl" style="display:none">
+    <li><button onclick="go('adash')" data-p="adash">Dashboard</button></li>
+    <li><button onclick="go('aev')" data-p="aev">Events</button></li>
+    <li><button onclick="go('aan')" data-p="aan">Announcements</button></li>
+    <li><button onclick="go('ahlp')" data-p="ahlp">Help Center</button></li>
+    <li><button onclick="go('asg')" data-p="asg">Suggestions</button></li>
+  </ul>
+  <div class="navr">
+    <span class="rbadge" id="rb">Student</span>
+    <button class="nbtn" onclick="logout()">Logout</button>
+  </div>
+</nav>
+
+<!-- STUDENT HOME -->
+<div id="pg-home" class="page">
+  <div class="hero">
+    <div class="chip">CSE Department</div>
+    <h1>Events <em>&amp;</em><br>Certificates</h1>
+    <p>Browse department events and download your certificates instantly.</p>
+    <div class="srch"><span>&#9906;</span><input type="text" id="si" placeholder="Search events&#8230;" oninput="renderEv()"></div>
+  </div>
+  <div class="wrap">
+    <div class="sdiv"><h2>All Events</h2></div>
+    <div class="egrid" id="egrid"></div>
+    <div class="sdiv"><h2>Latest Announcements</h2></div>
+    <div id="aprev"></div>
+    <button class="btn bo" onclick="go('ann')" style="margin-top:10px">View All Announcements</button>
+  </div>
+</div>
+
+<!-- DETAIL -->
+<div id="pg-detail" class="page">
+  <div class="wrap">
+    <button class="back" onclick="go('home')">&#8592; Back to Events</button>
+    <div id="dbody"></div>
+  </div>
+</div>
+
+<!-- ANNOUNCEMENTS -->
+<div id="pg-ann" class="page">
+  <div class="wrap">
+    <div class="ey">Latest Updates</div>
+    <div class="pt">Announcements</div>
+    <div class="ps">Department news and important notices</div>
+    <div id="annl"></div>
+  </div>
+</div>
+
+<!-- HELP -->
+<div id="pg-help" class="page">
+  <div class="wrap">
+    <div class="ey">Support</div>
+    <div class="pt">Help Center</div>
+    <div class="ps">Contact us for certificate or event issues</div>
+    <div class="hgrid" id="hinfo"></div>
+    <div class="ibox">
+      <h3>Certificate Issue?</h3>
+      <p>If your name is spelled incorrectly or your certificate was not generated, contact us directly. Include your name, roll number and event name.</p>
+      <div class="ibtns" id="ibtns"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SUGGESTIONS -->
+<div id="pg-sugg" class="page">
+  <div class="wrap">
+    <div class="ey">Your Voice</div>
+    <div class="pt">Suggestions</div>
+    <div class="ps">Help us improve department events</div>
+    <div class="sw">
+      <h3>Share Your Thoughts</h3>
+      <p>Your feedback matters. Name is completely optional.</p>
+      <div class="fg"><label>Your Name (Optional)</label><input type="text" id="sn" placeholder="Anonymous"></div>
+      <div class="fg"><label>Suggestion *</label><textarea id="st" rows="5" placeholder="Write your suggestion here&#8230;"></textarea></div>
+      <button class="btn bp" onclick="subSugg()">Submit Suggestion</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN DASH -->
+<div id="pg-adash" class="page">
+  <div class="wrap">
+    <div class="ey">Admin Panel</div>
+    <div class="pt">Dashboard</div>
+    <div class="ps">Manage events, certificates, announcements and more.</div>
+    <div class="strow">
+      <div class="stc" onclick="go('aev')"><div class="num" id="sv">0</div><div class="lbl">Total Events</div></div>
+      <div class="stc" onclick="go('aan')"><div class="num" id="sa">0</div><div class="lbl">Announcements</div></div>
+      <div class="stc" onclick="go('asg')"><div class="num" id="ss">0</div><div class="lbl">Suggestions</div></div>
+    </div>
+    <div class="sdiv"><h2>Quick Actions</h2></div>
+    <div class="qarow">
+      <div class="qac" onclick="go('aev')"><div class="qi">&#128197;</div><div><h4>Manage Events</h4><p>Add, edit, delete events</p></div></div>
+      <div class="qac" onclick="go('aan')"><div class="qi">&#128226;</div><div><h4>Announcements</h4><p>Post department updates</p></div></div>
+      <div class="qac" onclick="go('asg')"><div class="qi">&#128161;</div><div><h4>Suggestions</h4><p>View student feedback</p></div></div>
+      <div class="qac" onclick="go('ahlp')"><div class="qi">&#128506;</div><div><h4>Help Center</h4><p>Update contact info</p></div></div>
+      <div class="qac" onclick="go('home')"><div class="qi">&#128065;</div><div><h4>Student Preview</h4><p>See the student view</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN EVENTS -->
+<div id="pg-aev" class="page">
+  <div class="wrap">
+    <div class="ey">Management</div>
+    <div class="pt">Manage Events</div>
+    <div class="ps">Add, edit or delete events. Upload a photo and click "Certs" to manage department-wise certificate links.</div>
+    <div class="panel">
+      <div class="ptop">Add New Event</div>
+      <div class="fr2">
+        <div class="fg"><label>Event Name *</label><input type="text" id="nn" placeholder="e.g. Bug Hunt 2025"></div>
+        <div class="fg"><label>Event Date</label><input type="date" id="nd"></div>
+      </div>
+      <div class="fg"><label>Description</label><textarea id="ndc" rows="3" placeholder="Brief description&#8230;"></textarea></div>
+      <!-- NEW: Photo Upload -->
+      <div>
+        <label class="pu-label">Event Photo (Optional)</label>
+        <div class="photo-drop" id="ndrop">
+          <input type="file" id="nphoto" accept="image/*" onchange="handlePhoto('n',this)">
+          <div class="ico">🖼</div>
+          <div class="txt"><strong>Click to upload</strong> or drag &amp; drop &mdash; JPG, PNG, WEBP<br><span style="font-size:11px">Displayed on event card &amp; detail page</span></div>
+        </div>
+        <div class="photo-prev" id="nprev"><img id="nimg" src="" alt="Preview"><button class="rm" onclick="rmPhoto('n')">✕ Remove</button></div>
+      </div>
+      <div class="cbw" style="margin-top:4px"><input type="checkbox" id="nu"><label for="nu">Mark as Upcoming Event</label></div>
+      <button class="btn bp" onclick="addEv()">Add Event</button>
+    </div>
+    <div class="panel">
+      <div class="ptop" id="aevt">All Events</div>
+      <div id="aevl"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN CERTS -->
+<div id="pg-acert" class="page">
+  <div class="wrap">
+    <button class="back" onclick="go('aev')">&#8592; Back to Events</button>
+    <div class="ey">Certificates</div>
+    <div class="pt" id="ctitle">Manage Certificates</div>
+    <div class="ps">Add a separate Google Drive link for each department. Select a department, then paste the Drive link.</div>
+    <div class="panel">
+      <div class="ptop">Add Certificate Link</div>
+      <div class="fg">
+        <label>Select Department</label>
+        <div class="dept-grid" id="deptgrid"></div>
+      </div>
+      <div class="fg"><label>Google Drive Link *</label><input type="url" id="nl2" placeholder="https://drive.google.com/&#8230;"></div>
+      <button class="btn bp" onclick="addCert()">Add Link</button>
+    </div>
+    <div class="panel">
+      <div class="ptop" id="clt">Certificate Links</div>
+      <div id="acl"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN ANN -->
+<div id="pg-aan" class="page">
+  <div class="wrap">
+    <div class="ey">Management</div>
+    <div class="pt">Announcements</div>
+    <div class="ps">Post updates visible to all students.</div>
+    <div class="panel">
+      <div class="ptop">Post Announcement</div>
+      <div class="fg"><label>Title *</label><input type="text" id="nat" placeholder="Announcement title"></div>
+      <div class="fg"><label>Content *</label><textarea id="nac" rows="4" placeholder="Write your announcement&#8230;"></textarea></div>
+      <button class="btn bp" onclick="addAnn()">Post Announcement</button>
+    </div>
+    <div class="panel">
+      <div class="ptop" id="aant">All Announcements</div>
+      <div id="aanl"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN HELP -->
+<div id="pg-ahlp" class="page">
+  <div class="wrap">
+    <div class="ey">Settings</div>
+    <div class="pt">Help Center</div>
+    <div class="ps">Update contact information shown to students.</div>
+    <div class="panel" style="max-width:520px">
+      <div class="ptop">Contact Information</div>
+      <div class="fg"><label>Department Email</label><input type="email" id="hem" placeholder="pinkusohat@gmail.com"></div>
+      <div class="fg"><label>Phone Number</label><input type="tel" id="hph" placeholder="+91 7288 917 131"></div>
+      <div class="fg"><label>WhatsApp Number</label><input type="tel" id="hwa" placeholder="+91 7288 917 131"></div>
+      <button class="btn bp" onclick="saveHelp()">Save Contact Info</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN SUGG -->
+<div id="pg-asg" class="page">
+  <div class="wrap">
+    <div class="ey">Student Feedback</div>
+    <div class="pt">Suggestions</div>
+    <div class="ps">Review feedback submitted by students.</div>
+    <div id="asgl"></div>
+  </div>
+</div>
+
+<!-- MODAL: EDIT EVENT -->
+<div class="ov" id="m-ee">
+  <div class="modal">
+    <button class="mc" onclick="cm('m-ee')">&#215;</button>
+    <div class="mt">Edit Event</div>
+    <input type="hidden" id="ee-id">
+    <div class="fr2">
+      <div class="fg"><label>Name</label><input type="text" id="ee-n"></div>
+      <div class="fg"><label>Date</label><input type="date" id="ee-d"></div>
+    </div>
+    <div class="fg"><label>Description</label><textarea id="ee-dc" rows="3"></textarea></div>
+    <!-- Edit Photo -->
+    <div>
+      <label class="pu-label">Event Photo</label>
+      <div class="photo-drop" id="edrop">
+        <input type="file" id="ephoto" accept="image/*" onchange="handlePhoto('e',this)">
+        <div class="ico">🖼</div>
+        <div class="txt"><strong>Click to change photo</strong> or drag &amp; drop</div>
+      </div>
+      <div class="photo-prev" id="eprev"><img id="eimg" src="" alt="Preview"><button class="rm" onclick="rmPhoto('e')">✕ Remove Photo</button></div>
+    </div>
+    <div class="cbw" style="margin-top:8px"><input type="checkbox" id="ee-u"><label for="ee-u">Upcoming</label></div>
+    <div class="ma">
+      <button class="btn bo" onclick="cm('m-ee')">Cancel</button>
+      <button class="btn bp" onclick="saveEE()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: DELETE EVENT -->
+<div class="ov" id="m-de">
+  <div class="modal">
+    <button class="mc" onclick="cm('m-de')">&#215;</button>
+    <div class="mt">Delete Event</div>
+    <p class="ms" id="de-msg">Delete this event?</p>
+    <input type="hidden" id="de-id">
+    <div class="ma">
+      <button class="btn bo" onclick="cm('m-de')">Cancel</button>
+      <button class="btn bd" onclick="doDE()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: EDIT CERT -->
+<div class="ov" id="m-ec">
+  <div class="modal">
+    <button class="mc" onclick="cm('m-ec')">&#215;</button>
+    <div class="mt">Edit Certificate Link</div>
+    <input type="hidden" id="ec-id">
+    <div class="fg"><label>Department</label><input type="text" id="ec-b" readonly style="opacity:.55;cursor:not-allowed"></div>
+    <div class="fg"><label>Drive Link</label><input type="url" id="ec-l"></div>
+    <div class="ma">
+      <button class="btn bo" onclick="cm('m-ec')">Cancel</button>
+      <button class="btn bp" onclick="saveEC()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: DELETE CERT -->
+<div class="ov" id="m-dc">
+  <div class="modal">
+    <button class="mc" onclick="cm('m-dc')">&#215;</button>
+    <div class="mt">Remove Certificate</div>
+    <p class="ms">Remove this certificate link permanently?</p>
+    <input type="hidden" id="dc-id">
+    <div class="ma">
+      <button class="btn bo" onclick="cm('m-dc')">Cancel</button>
+      <button class="btn bd" onclick="doDC()">Remove</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: EDIT ANN -->
+<div class="ov" id="m-ea">
+  <div class="modal">
+    <button class="mc" onclick="cm('m-ea')">&#215;</button>
+    <div class="mt">Edit Announcement</div>
+    <input type="hidden" id="ea-id">
+    <div class="fg"><label>Title</label><input type="text" id="ea-t"></div>
+    <div class="fg"><label>Content</label><textarea id="ea-c" rows="4"></textarea></div>
+    <div class="ma">
+      <button class="btn bo" onclick="cm('m-ea')">Cancel</button>
+      <button class="btn bp" onclick="saveEA()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: DELETE ANN -->
+<div class="ov" id="m-da">
+  <div class="modal">
+    <button class="mc" onclick="cm('m-da')">&#215;</button>
+    <div class="mt">Delete Announcement</div>
+    <p class="ms" id="da-msg">Delete this announcement?</p>
+    <input type="hidden" id="da-id">
+    <div class="ma">
+      <button class="btn bo" onclick="cm('m-da')">Cancel</button>
+      <button class="btn bd" onclick="doDA()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: DELETE SUGG -->
+<div class="ov" id="m-ds">
+  <div class="modal">
+    <button class="mc" onclick="cm('m-ds')">&#215;</button>
+    <div class="mt">Delete Suggestion</div>
+    <p class="ms">Remove this suggestion permanently?</p>
+    <input type="hidden" id="ds-id">
+    <div class="ma">
+      <button class="btn bo" onclick="cm('m-ds')">Cancel</button>
+      <button class="btn bd" onclick="doDS()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── DEPARTMENTS LIST (full) ─────────────────────────
+var DEPTS=['CSE','ECE','IT','AIML','DS','MCA','MECH','CIVIL','EEE','AIDS','CSBS','CSD','MBA','BBA','CHEM','BIO-TECH','MECH-AI','Volunteers','Winners'];
+
+// ─── DATA ───────────────────────────────────────────
+var role=null,curPage=null,curEv=null,idc=200;
+// temp photo buffers keyed by context 'n'=new, 'e'=edit
+var photoBuf={n:'',e:''};
+var selDept=null;
+
+function nid(){return ++idc;}
+function now(){var d=new Date();return d.toLocaleDateString('en-IN')+' '+d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});}
+
+var EVENTS=[
+  {id:1,name:'Bug Hunt',desc:'A competitive debugging event. Find and fix bugs in code within a time limit. Tests your skills under real pressure.',date:'2024-03-15',up:false,photo:'/src/bughunt.jpeg'},
+
+];
+
+var CERTS = [
+  {id: 1, evId: 1, br: 'CSE',        lk: 'https://drive.google.com/drive/folders/1EkRSUhAit7N0HDXqmmk5-eYNJcBV1dqf'},
+  {id: 2, evId: 1, br: 'ECE',        lk: 'https://drive.google.com/drive/folders/1PzL0m2bDs08bclyNrPdLjB2ztvCEKKI4'},
+  {id: 3, evId: 1, br: 'IT',         lk: 'https://drive.google.com/drive/folders/1Af1SyP4W9s4sVNOVubB6Dra5xJKrz-g0'},
+  {id: 4, evId: 1, br: 'DS',         lk: 'https://drive.google.com/drive/folders/1c0fuMD2-34VWsDpxT6QKoXUAtWBtkkTk'},
+  {id: 5, evId: 1, br: 'AIML',       lk: 'https://drive.google.com/drive/folders/1qrZRVHBEEXfDxAzkfMPaBEfGOEouWxn4'},
+  {id: 6, evId: 1, br: 'Volunteers', lk: 'https://drive.google.com/drive/folders/10GNiyK2eTBMoY_U0H_6aYzlH-xaxgpk-?usp=drive_link'},
+  {id: 7, evId: 1, br: 'Winners',    lk: 'https://drive.google.com/drive/folders/1nCtN4nlAZMWIilPxwkScml6GRdT3mX5D?usp=drive_link'}
+];
+
+var ANNS=[
+  {id:1,title:'Welcome to CSE - SABL Events',cont:'This portal is your one-stop destination for all CSE department events, certificates and announcements. Stay updated!',dt:'18 Feb 2026  06:00'},
+];
+var HELP={em:'pinkusohat@gmail.com',ph:'+91 7288 917 131',wa:'7288 917 131'};
+var SUGGS=[
+  {id:1,nm:'Rahul K.',tx:'Please add more coding competitions related to Data Structures.',dt:'08 Jan 2025  11:22'},
+  {id:2,nm:'Anonymous',tx:'The certificate download links are very helpful. Please keep them updated after every event.',dt:'07 Jan 2025  16:45'}
+];
+
+// ─── UTILS ──────────────────────────────────────────
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function ini(n){return (n||'??').substring(0,2).toUpperCase();}
+function fdt(d){if(!d)return 'TBA';try{return new Date(d).toLocaleDateString('en-IN',{year:'numeric',month:'short',day:'numeric'});}catch(e){return d;}}
+
+function toast(msg,t){
+  var c=document.getElementById('toasts');
+  var el=document.createElement('div');
+  el.className='toast '+(t==='e'?'te':'ts');
+  el.textContent=(t==='e'?'⚠ ':'✓ ')+msg;
+  c.appendChild(el);
+  setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},3300);
+}
+function om(id){document.getElementById(id).classList.add('open');}
+function cm(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.ov').forEach(function(o){
+  o.addEventListener('click',function(e){if(e.target===o)o.classList.remove('open');});
+});
+
+// ─── PHOTO UPLOAD ────────────────────────────────────
+function handlePhoto(ctx,input){
+  var file=input.files&&input.files[0];
+  if(!file)return;
+  if(!file.type.match(/^image\//)){toast('Please select an image file','e');return;}
+  var r=new FileReader();
+  r.onload=function(e){
+    photoBuf[ctx]=e.target.result;
+    document.getElementById(ctx+'img').src=e.target.result;
+    document.getElementById(ctx+'drop').style.display='none';
+    document.getElementById(ctx+'prev').style.display='block';
+  };
+  r.readAsDataURL(file);
+}
+function rmPhoto(ctx){
+  photoBuf[ctx]='';
+  var inp=document.getElementById(ctx+'photo');
+  if(inp)inp.value='';
+  document.getElementById(ctx+'img').src='';
+  document.getElementById(ctx+'prev').style.display='none';
+  document.getElementById(ctx+'drop').style.display='block';
+}
+function resetPhoto(ctx){
+  photoBuf[ctx]='';
+  var inp=document.getElementById(ctx+'photo');
+  if(inp)inp.value='';
+  var img=document.getElementById(ctx+'img');
+  if(img)img.src='';
+  var prev=document.getElementById(ctx+'prev');
+  if(prev)prev.style.display='none';
+  var drop=document.getElementById(ctx+'drop');
+  if(drop)drop.style.display='block';
+}
+function loadPhotoEdit(url){
+  if(url){
+    photoBuf['e']=url;
+    document.getElementById('eimg').src=url;
+    document.getElementById('eprev').style.display='block';
+    document.getElementById('edrop').style.display='none';
+  } else {
+    resetPhoto('e');
+  }
+}
+
+// ─── AUTH ────────────────────────────────────────────
+function ltab(t,btn){
+  document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('on');});
+  document.querySelectorAll('.tp').forEach(function(p){p.classList.remove('on');});
+  btn.classList.add('on');
+  document.getElementById('tp-'+t).classList.add('on');
+  document.getElementById('lerr').classList.remove('show');
+}
+function loginS(){role='student';afterLogin();}
+function loginA(){
+  var u=document.getElementById('au').value.trim();
+  var p=document.getElementById('ap').value;
+  if(u==='admin'&&p==='admin123'){role='admin';afterLogin();}
+  else{var e=document.getElementById('lerr');e.classList.add('show');setTimeout(function(){e.classList.remove('show');},3000);}
+}
+function afterLogin(){
+  document.getElementById('pg-login').classList.remove('active');
+  var nav=document.getElementById('nav');nav.classList.add('on');
+  if(role==='admin'){
+    document.getElementById('rb').textContent='Admin';
+    document.getElementById('snl').style.display='none';
+    document.getElementById('anl').style.display='flex';
+    go('adash');
+  } else {
+    document.getElementById('rb').textContent='Student';
+    document.getElementById('snl').style.display='flex';
+    document.getElementById('anl').style.display='none';
+    go('home');
+  }
+}
+function logout(){
+  role=null;
+  document.getElementById('nav').classList.remove('on');
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.getElementById('pg-login').classList.add('active');
+  document.getElementById('au').value='';
+  document.getElementById('ap').value='';
+  document.querySelectorAll('.tab').forEach(function(b,i){b.classList.toggle('on',i===0);});
+  document.querySelectorAll('.tp').forEach(function(p,i){p.classList.toggle('on',i===0);});
+}
+function gohome(){go(role==='admin'?'adash':'home');}
+
+// ─── NAV ─────────────────────────────────────────────
+var PM={home:'pg-home',detail:'pg-detail',ann:'pg-ann',help:'pg-help',sugg:'pg-sugg',adash:'pg-adash',aev:'pg-aev',acert:'pg-acert',aan:'pg-aan',ahlp:'pg-ahlp',asg:'pg-asg'};
+function go(page,evId){
+  if(evId!==undefined)curEv=evId;
+  if(page==='home'){renderEv();renderAprev();}
+  if(page==='detail'){renderDet(curEv);}
+  if(page==='ann'){renderAnns();}
+  if(page==='help'){renderHelp();}
+  if(page==='adash'){renderDash();}
+  if(page==='aev'){renderAEv();}
+  if(page==='acert'){renderACerts(curEv);buildDeptGrid();}
+  if(page==='aan'){renderAAnn();}
+  if(page==='ahlp'){loadHF();}
+  if(page==='asg'){renderASg();}
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  var pid=PM[page];
+  if(pid)document.getElementById(pid).classList.add('active');
+  curPage=page;
+  document.querySelectorAll('.nl button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-p')===page);});
+  window.scrollTo(0,0);
+}
+
+// ─── STUDENT: EVENTS ─────────────────────────────────
+function renderEv(){
+  var q=((document.getElementById('si')||{}).value||'').toLowerCase().trim();
+  var list=EVENTS.filter(function(e){return !q||e.name.toLowerCase().indexOf(q)!==-1||(e.desc||'').toLowerCase().indexOf(q)!==-1;});
+  var g=document.getElementById('egrid');
+  if(!g)return;
+  if(!list.length){g.innerHTML='<div class="empty"><p>No events found'+(q?' for &ldquo;'+esc(q)+'&rdquo;':'')+'. Try a different search.</p></div>';return;}
+  g.innerHTML=list.map(function(ev,i){
+    var imgHtml=ev.photo?'<img class="ev-img" src="'+ev.photo+'" alt="'+esc(ev.name)+'">':'';
+    return '<div class="ecard" onclick="go(\'detail\','+ev.id+')" style="animation-delay:'+(i*0.06)+'s">'+
+      '<div class="eth">'+imgHtml+'<div class="etl">'+ini(ev.name)+'</div><div class="etov"></div><div class="etpl">View Details</div>'+(ev.up?'<span class="upb">Upcoming</span>':'')+' </div>'+
+      '<div class="einf"><h3>'+esc(ev.name)+'</h3><div class="meta">'+fdt(ev.date)+'</div></div>'+
+    '</div>';
+  }).join('');
+}
+
+function renderAprev(){
+  var el=document.getElementById('aprev');
+  if(!el)return;
+  var list=ANNS.slice(0,3);
+  if(!list.length){el.innerHTML='<p style="color:var(--g);font-size:14px">No announcements yet.</p>';return;}
+  el.innerHTML=list.map(function(a){return '<div class="annc"><h3>'+esc(a.title)+'</h3><p>'+esc(a.cont)+'</p><div class="dt">'+esc(a.dt)+'</div></div>';}).join('');
+}
+
+// ─── STUDENT: DETAIL ─────────────────────────────────
+function renderDet(id){
+  var ev=null;
+  for(var i=0;i<EVENTS.length;i++){if(EVENTS[i].id===id){ev=EVENTS[i];break;}}
+  if(!ev){document.getElementById('dbody').innerHTML='<p style="color:var(--g)">Event not found.</p>';return;}
+  var certs=CERTS.filter(function(c){return c.evId===id;});
+  var heroInner=ev.photo?'<img src="'+ev.photo+'" alt="'+esc(ev.name)+'">':'<div class="big">'+ini(ev.name)+'</div>';
+  var ch='';
+  if(!certs.length){
+    ch='<div class="nocert"><p>No certificates available yet.<br>Check back later or contact the department.</p></div>';
+  } else {
+    var tabs=certs.map(function(c,i){return '<button class="btab'+(i===0?' on':'')+'" onclick="swBr(\'b-'+c.id+'\',this)">'+esc(c.br)+'</button>';}).join('');
+    var pans=certs.map(function(c,i){
+      return '<div class="bp2'+(i===0?' on':'')+'" id="b-'+c.id+'">'+
+        '<div class="ccard">'+
+          '<div><h4>'+esc(ev.name)+' &mdash; '+esc(c.br)+' Certificates</h4><p>Click to view or download from Google Drive</p></div>'+
+          '<div class="cact"><a href="'+esc(c.lk)+'" target="_blank" rel="noopener" class="btn bo bsm">Open Drive</a><a href="'+esc(c.lk)+'" target="_blank" rel="noopener" class="btn bp bsm">Download</a></div>'+
+        '</div></div>';
+    }).join('');
+    ch='<div class="btabs">'+tabs+'</div>'+pans;
+  }
+  document.getElementById('dbody').innerHTML=
+    '<div class="dgrid">'+
+      '<div class="dhero">'+heroInner+'</div>'+
+      '<div class="dinfo">'+
+        '<div class="ey" style="margin-bottom:11px">'+(ev.up?'Upcoming Event':'Past Event')+'</div>'+
+        '<h1>'+esc(ev.name)+'</h1>'+
+        '<p>'+(esc(ev.desc)||'No description available.')+'</p>'+
+        '<div class="dmeta"><div><strong>'+fdt(ev.date)+'</strong><span>Date</span></div><div><strong>'+certs.length+' Dept'+(certs.length!==1?'s':'')+'</strong><span>Certificates</span></div></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="sdiv"><h2>Download Certificates</h2></div>'+ch;
+}
+
+function swBr(pid,btn){
+  var page=btn.closest('.page')||document.body;
+  page.querySelectorAll('.btab').forEach(function(b){b.classList.remove('on');});
+  page.querySelectorAll('.bp2').forEach(function(p){p.classList.remove('on');});
+  btn.classList.add('on');
+  document.getElementById(pid).classList.add('on');
+}
+
+// ─── STUDENT: ANNS ───────────────────────────────────
+function renderAnns(){
+  var el=document.getElementById('annl');
+  if(!el)return;
+  if(!ANNS.length){el.innerHTML='<div style="text-align:center;padding:60px;color:var(--g)">No announcements yet.</div>';return;}
+  el.innerHTML=ANNS.map(function(a,i){return '<div class="annc" style="animation-delay:'+(i*0.07)+'s"><h3>'+esc(a.title)+'</h3><p>'+esc(a.cont)+'</p><div class="dt">'+esc(a.dt)+'</div></div>';}).join('');
+}
+
+// ─── STUDENT: HELP ───────────────────────────────────
+function renderHelp(){
+  var h=HELP;
+  var hi=document.getElementById('hinfo');
+  var ib=document.getElementById('ibtns');
+  if(!hi)return;
+  hi.innerHTML=
+    '<div class="hcard"><div class="ico">&#128222;</div><h3>Contact Information</h3>'+
+    '<div class="crow"><span class="lb">Email</span>'+(h.em||'<em style="color:var(--g)">Not set</em>')+'</div>'+
+    '<div class="crow"><span class="lb">Phone</span>'+(h.ph||'<em style="color:var(--g)">Not set</em>')+'</div>'+
+    '<div class="crow"><span class="lb">WhatsApp</span>'+(h.wa||'<em style="color:var(--g)">Not set</em>')+'</div></div>'+
+    '<div class="hcard"><div class="ico">&#9200;</div><h3>Office Hours</h3>'+
+    '<div class="crow"><span class="lb">Mon&ndash;Fri</span>9:00 AM &ndash; 5:00 PM</div>'+
+    '<div class="crow"><span class="lb">Saturday</span>9:00 AM &ndash; 1:00 PM</div>'+
+    '<div class="crow"><span class="lb">Sunday</span>Closed</div></div>';
+  var b='';
+  if(h.wa){b+='<a href="https://wa.me/'+h.wa.replace(/[^0-9]/g,'')+'?text=Hi+I+have+a+certificate+issue" target="_blank" class="btn bp">&#128172; WhatsApp Us</a>';}
+  if(h.em){b+='<a href="mailto:'+esc(h.em)+'?subject=Certificate+Issue&body=Hi+I+have+a+certificate+issue.%0AName:%0ARoll+No:%0AEvent:" class="btn bo">&#9993; Send Email</a>';}
+  if(!b)b='<p style="color:var(--g);font-size:13px">Contact info not configured yet.</p>';
+  ib.innerHTML=b;
+}
+
+// ─── STUDENT: SUGG ───────────────────────────────────
+function subSugg(){
+  var nm=document.getElementById('sn').value.trim();
+  var tx=document.getElementById('st').value.trim();
+  if(!tx){toast('Please write a suggestion','e');return;}
+  SUGGS.unshift({id:nid(),nm:nm||'Anonymous',tx:tx,dt:now()});
+  document.getElementById('sn').value='';
+  document.getElementById('st').value='';
+  toast('Thank you for your suggestion!');
+}
+
+// ─── ADMIN: DASH ─────────────────────────────────────
+function renderDash(){
+  document.getElementById('sv').textContent=EVENTS.length;
+  document.getElementById('sa').textContent=ANNS.length;
+  document.getElementById('ss').textContent=SUGGS.length;
+}
+
+// ─── ADMIN: EVENTS ───────────────────────────────────
+function renderAEv(){
+  var el=document.getElementById('aevl');
+  var tl=document.getElementById('aevt');
+  if(!el)return;
+  tl.textContent='All Events ('+EVENTS.length+')';
+  if(!EVENTS.length){el.innerHTML='<div style="text-align:center;padding:38px;color:var(--g)">No events yet. Use the form above.</div>';return;}
+  el.innerHTML=EVENTS.map(function(ev){
+    var tmb=ev.photo?'<img src="'+ev.photo+'" alt="'+esc(ev.name)+'">':ini(ev.name);
+    return '<div class="erow">'+
+      '<div class="ethm">'+tmb+'</div>'+
+      '<div class="erinf"><div class="en">'+esc(ev.name)+(ev.up?'<span class="uch">Upcoming</span>':'')+'</div><div class="em">'+fdt(ev.date)+'</div></div>'+
+      '<button class="btn bo bsm" onclick="go(\'acert\','+ev.id+')">Certs</button>'+
+      '<div class="eract">'+
+        '<button class="btn bo bsm" onclick="openEE('+ev.id+')">Edit</button>'+
+        '<button class="btn bd bsm" onclick="openDE('+ev.id+',\''+esc(ev.name).replace(/'/g,"\\'")+'\')">Delete</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+function addEv(){
+  var n=document.getElementById('nn').value.trim();
+  var d=document.getElementById('nd').value;
+  var dc=document.getElementById('ndc').value.trim();
+  var u=document.getElementById('nu').checked;
+  var ph=photoBuf['n']||'';
+  if(!n){toast('Event name is required','e');return;}
+  EVENTS.push({id:nid(),name:n,date:d,desc:dc,up:u,photo:ph});
+  document.getElementById('nn').value='';
+  document.getElementById('nd').value='';
+  document.getElementById('ndc').value='';
+  document.getElementById('nu').checked=false;
+  resetPhoto('n');
+  renderAEv();
+  toast('Event added!');
+}
+
+function openEE(id){
+  var ev=null;for(var i=0;i<EVENTS.length;i++){if(EVENTS[i].id===id){ev=EVENTS[i];break;}}
+  if(!ev)return;
+  document.getElementById('ee-id').value=ev.id;
+  document.getElementById('ee-n').value=ev.name;
+  document.getElementById('ee-d').value=ev.date||'';
+  document.getElementById('ee-dc').value=ev.desc||'';
+  document.getElementById('ee-u').checked=ev.up||false;
+  loadPhotoEdit(ev.photo||'');
+  om('m-ee');
+}
+
+function saveEE(){
+  var id=parseInt(document.getElementById('ee-id').value);
+  var prevShowing=document.getElementById('eprev').style.display!=='none';
+  for(var i=0;i<EVENTS.length;i++){
+    if(EVENTS[i].id===id){
+      EVENTS[i].name=document.getElementById('ee-n').value.trim();
+      EVENTS[i].date=document.getElementById('ee-d').value;
+      EVENTS[i].desc=document.getElementById('ee-dc').value.trim();
+      EVENTS[i].up=document.getElementById('ee-u').checked;
+      if(photoBuf['e']){
+        EVENTS[i].photo=photoBuf['e'];
+      } else if(!prevShowing){
+        EVENTS[i].photo='';
+      }
+      break;
+    }
+  }
+  cm('m-ee');renderAEv();toast('Event updated!');
+}
+
+function openDE(id,name){
+  document.getElementById('de-id').value=id;
+  document.getElementById('de-msg').textContent='Delete "'+name+'"? All certificate links for this event will also be removed.';
+  om('m-de');
+}
+function doDE(){
+  var id=parseInt(document.getElementById('de-id').value);
+  EVENTS=EVENTS.filter(function(e){return e.id!==id;});
+  CERTS=CERTS.filter(function(c){return c.evId!==id;});
+  cm('m-de');renderAEv();toast('Event deleted.');
+}
+
+// ─── ADMIN: CERT DEPT GRID ───────────────────────────
+function buildDeptGrid(){
+  selDept=null;
+  var g=document.getElementById('deptgrid');
+  if(!g)return;
+  var used=CERTS.filter(function(c){return c.evId===curEv;}).map(function(c){return c.br;});
+  g.innerHTML=DEPTS.map(function(d){
+    var isUsed=used.indexOf(d)!==-1;
+    return '<div class="dbtn'+(isUsed?' used':'')+'" onclick="pickDept(this,\''+d+'\')" title="'+(isUsed?'Already added — edit below':'Add '+d+' link')+'">'+d+(isUsed?' ✓':'')+'</div>';
+  }).join('');
+}
+function pickDept(el,d){
+  if(el.classList.contains('used'))return;
+  document.querySelectorAll('#deptgrid .dbtn').forEach(function(b){b.classList.remove('sel');});
+  el.classList.add('sel');
+  selDept=d;
+}
+
+// ─── ADMIN: CERTS ────────────────────────────────────
+function renderACerts(evId){
+  var ev=null;for(var i=0;i<EVENTS.length;i++){if(EVENTS[i].id===evId){ev=EVENTS[i];break;}}
+  var list=CERTS.filter(function(c){return c.evId===evId;});
+  var el=document.getElementById('acl');
+  var ct=document.getElementById('ctitle');
+  var lt=document.getElementById('clt');
+  if(!el)return;
+  if(ct)ct.textContent='Certificates'+(ev?' \u2014 '+ev.name:'');
+  if(lt)lt.textContent='Certificate Links ('+list.length+')';
+  if(!list.length){el.innerHTML='<div style="text-align:center;padding:30px;color:var(--g)">No links added yet. Select a department above and paste a Drive link.</div>';return;}
+  el.innerHTML='<table class="ctbl"><thead><tr><th>Department</th><th>Drive Link</th><th></th></tr></thead><tbody>'+
+    list.map(function(c){
+      return '<tr>'+
+        '<td><span class="dtag">'+esc(c.br)+'</span></td>'+
+        '<td class="lkcell" title="'+esc(c.lk)+'">'+esc(c.lk)+'</td>'+
+        '<td class="actcell">'+
+          '<a href="'+esc(c.lk)+'" target="_blank" class="btn bo bsm" style="margin-right:4px">Open</a>'+
+          '<button class="btn bo bsm" onclick="openEC('+c.id+')" style="margin-right:4px">Edit</button>'+
+          '<button class="btn bd bsm" onclick="openDC('+c.id+')">Remove</button>'+
+        '</td>'+
+      '</tr>';
+    }).join('')+
+  '</tbody></table>';
+}
+
+function addCert(){
+  if(!selDept){toast('Please select a department first','e');return;}
+  var lk=document.getElementById('nl2').value.trim();
+  if(!lk){toast('Drive link is required','e');return;}
+  if(lk.indexOf('http')!==0){toast('Please enter a valid URL','e');return;}
+  var exists=CERTS.some(function(c){return c.evId===curEv&&c.br===selDept;});
+  if(exists){toast(selDept+' link already added. Edit it below.','e');return;}
+  CERTS.push({id:nid(),evId:curEv,br:selDept,lk:lk});
+  document.getElementById('nl2').value='';
+  var added=selDept;
+  selDept=null;
+  renderACerts(curEv);
+  buildDeptGrid();
+  toast(added+' certificate link added!');
+}
+
+function openEC(id){
+  var c=null;for(var i=0;i<CERTS.length;i++){if(CERTS[i].id===id){c=CERTS[i];break;}}
+  if(!c)return;
+  document.getElementById('ec-id').value=c.id;
+  document.getElementById('ec-b').value=c.br;
+  document.getElementById('ec-l').value=c.lk;
+  om('m-ec');
+}
+function saveEC(){
+  var id=parseInt(document.getElementById('ec-id').value);
+  for(var i=0;i<CERTS.length;i++){
+    if(CERTS[i].id===id){CERTS[i].lk=document.getElementById('ec-l').value.trim();break;}
+  }
+  cm('m-ec');renderACerts(curEv);buildDeptGrid();toast('Certificate updated!');
+}
+function openDC(id){document.getElementById('dc-id').value=id;om('m-dc');}
+function doDC(){
+  var id=parseInt(document.getElementById('dc-id').value);
+  CERTS=CERTS.filter(function(c){return c.id!==id;});
+  cm('m-dc');renderACerts(curEv);buildDeptGrid();toast('Certificate removed.');
+}
+
+// ─── ADMIN: ANNS ─────────────────────────────────────
+function renderAAnn(){
+  var el=document.getElementById('aanl');
+  var tl=document.getElementById('aant');
+  if(!el)return;
+  tl.textContent='All Announcements ('+ANNS.length+')';
+  if(!ANNS.length){el.innerHTML='<div style="text-align:center;padding:38px;color:var(--g)">No announcements yet.</div>';return;}
+  el.innerHTML=ANNS.map(function(a){
+    var prev=a.cont.length>85?a.cont.substring(0,85)+'&hellip;':esc(a.cont);
+    return '<div class="erow">'+
+      '<div class="erinf" style="flex:1"><div class="en">'+esc(a.title)+'</div><div class="em">'+prev+'</div><div class="em">'+esc(a.dt)+'</div></div>'+
+      '<div class="eract">'+
+        '<button class="btn bo bsm" onclick="openEA('+a.id+')">Edit</button>'+
+        '<button class="btn bd bsm" onclick="openDA('+a.id+',\''+esc(a.title).replace(/'/g,"\\'")+'\')">Delete</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+function addAnn(){
+  var t=document.getElementById('nat').value.trim();
+  var c=document.getElementById('nac').value.trim();
+  if(!t||!c){toast('Title and content required','e');return;}
+  ANNS.unshift({id:nid(),title:t,cont:c,dt:now()});
+  document.getElementById('nat').value='';
+  document.getElementById('nac').value='';
+  renderAAnn();toast('Announcement posted!');
+}
+function openEA(id){
+  var a=null;for(var i=0;i<ANNS.length;i++){if(ANNS[i].id===id){a=ANNS[i];break;}}
+  if(!a)return;
+  document.getElementById('ea-id').value=a.id;
+  document.getElementById('ea-t').value=a.title;
+  document.getElementById('ea-c').value=a.cont;
+  om('m-ea');
+}
+function saveEA(){
+  var id=parseInt(document.getElementById('ea-id').value);
+  for(var i=0;i<ANNS.length;i++){
+    if(ANNS[i].id===id){ANNS[i].title=document.getElementById('ea-t').value.trim();ANNS[i].cont=document.getElementById('ea-c').value.trim();break;}
+  }
+  cm('m-ea');renderAAnn();toast('Announcement updated!');
+}
+function openDA(id,title){document.getElementById('da-id').value=id;document.getElementById('da-msg').textContent='Delete "'+title+'"?';om('m-da');}
+function doDA(){
+  var id=parseInt(document.getElementById('da-id').value);
+  ANNS=ANNS.filter(function(a){return a.id!==id;});
+  cm('m-da');renderAAnn();toast('Announcement deleted.');
+}
+
+// ─── ADMIN: HELP ─────────────────────────────────────
+function loadHF(){
+  document.getElementById('hem').value=HELP.em||'';
+  document.getElementById('hph').value=HELP.ph||'';
+  document.getElementById('hwa').value=HELP.wa||'';
+}
+function saveHelp(){
+  HELP.em=document.getElementById('hem').value.trim();
+  HELP.ph=document.getElementById('hph').value.trim();
+  HELP.wa=document.getElementById('hwa').value.trim();
+  toast('Contact info saved!');
+}
+
+// ─── ADMIN: SUGG ─────────────────────────────────────
+function renderASg(){
+  var el=document.getElementById('asgl');
+  if(!el)return;
+  if(!SUGGS.length){el.innerHTML='<div style="text-align:center;padding:80px;color:var(--g)">No suggestions received yet.</div>';return;}
+  el.innerHTML=SUGGS.map(function(s,i){
+    return '<div class="sr" style="animation-delay:'+(i*0.06)+'s">'+
+      '<div class="sb"><div class="sau">From: '+esc(s.nm)+'</div><div class="stx">'+esc(s.tx)+'</div><div class="sdt">'+esc(s.dt)+'</div></div>'+
+      '<button class="btn bd bsm" onclick="openDS('+s.id+')">Delete</button>'+
+    '</div>';
+  }).join('');
+}
+function openDS(id){document.getElementById('ds-id').value=id;om('m-ds');}
+function doDS(){
+  var id=parseInt(document.getElementById('ds-id').value);
+  SUGGS=SUGGS.filter(function(s){return s.id!==id;});
+  cm('m-ds');renderASg();toast('Suggestion deleted.');
+}
+</script>
+</body>
+</html>
