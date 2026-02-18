@@ -577,10 +577,17 @@ var selDept=null;
 function nid(){return ++idc;}
 function now(){var d=new Date();return d.toLocaleDateString('en-IN')+' '+d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});}
 
-var EVENTS=[
-  {id:1,name:'Bug Hunt',desc:'A competitive debugging event. Find and fix bugs in code within a time limit. Tests your skills under real pressure.',date:'2024-03-15',up:false,photo:'/src/bughunt.jpeg'},
-
+var EVENTS = [
+  {
+    id: 1,
+    name: 'Bug Hunt Challenge',
+    desc: 'A competitive debugging event. Find and fix bugs in code within a time limit. Tests your skills under real pressure.',
+    date: '2026-02-14',
+    up: false,
+    photo: 'src/bughunt.jpeg'
+  }
 ];
+
 
 var CERTS = [
   {id: 1, evId: 1, br: 'CSE',        lk: 'https://drive.google.com/drive/folders/1EkRSUhAit7N0HDXqmmk5-eYNJcBV1dqf'},
