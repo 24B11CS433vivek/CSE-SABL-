@@ -574,7 +574,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
 <script>
 // ─── DEPARTMENTS LIST (full) ─────────────────────────
-var DEPTS=['CSE','ECE','IT','AIML','DS','MCA','MECH','CIVIL','EEE','AIDS','CSBS','CSD','MBA','BBA','CHEM','BIO-TECH','MECH-AI','Volunteers','Winners'];
+var DEPTS=['CSE','ECE','IT','AIML','DS','MCA','MECH','CIVIL','EEE','AIDS','AG','CSD','MBA','BBA','CHEM','BIO-TECH','MECH-AI','Volunteers','Winners'];
 
 // ─── DATA ───────────────────────────────────────────
 var role=null,curPage=null,curEv=null,idc=200;
@@ -601,6 +601,14 @@ var EVENTS = [
     date: '2026-02-28',
     up: false,
     photo: 'src/buildabot.jpeg'
+  },
+  {
+    id: 3,
+    name: 'Brainy Bits Challenge',
+    desc: 'Solve jigsaw puzzles and test your problem-solving skills.',
+    date: '2026-03-14',
+    up: false,
+    photo: 'src/brainy.jpeg'
   }
 ];
 
@@ -620,7 +628,21 @@ var CERTS = [
   {id: 10, evId: 2, br: 'DS',     lk: 'https://drive.google.com/file/d/1qAiqNppowpl8PEW80Zf3W9Vt5yVe0p8Y/view?usp=sharing'},
   {id: 11, evId: 2, br: 'IT',     lk: 'https://drive.google.com/file/d/1rdq3Jn_Twnbp2fBG7CKlDFSAP4Eeis45/view?usp=sharing'},
   {id: 12, evId: 2, br: 'MCA',    lk: 'https://drive.google.com/file/d/15gkWuGo0As0wyGsk0MJW8WY610QEGDBv/view?usp=sharing'},
-  {id: 13, evId: 2, br: 'Winners', lk: 'https://drive.google.com/drive/folders/12f4rxGUGgmqTJIOY0jNYLOVZufNqBEWI?usp=sharing'}
+  {id: 13, evId: 2, br: 'Winners', lk: 'https://drive.google.com/drive/folders/12f4rxGUGgmqTJIOY0jNYLOVZufNqBEWI?usp=sharing'},
+
+  // Brainy Bits Challenge
+  {id: 14, evId: 3, br: 'AG',          lk: 'https://drive.google.com/drive/folders/1DntGw0_ULEG9AVfV83FRK-ZVQfO69FdT?usp=sharing'},
+  {id: 15, evId: 3, br: 'AIML',          lk: 'https://drive.google.com/drive/folders/1GM-O40xPzj36RJ5R89h60JeB93pb1P6O?usp=drive_link'},
+  {id: 16, evId: 3, br: 'CIVIL',       lk: 'https://drive.google.com/drive/folders/1pYbEFR1BMDzPz-QY8owWCJHwnOmP17ey?usp=drive_link'},
+  {id: 17, evId: 3, br: 'CSE',         lk: 'https://drive.google.com/drive/folders/1kFUVEnOr_sGLQNgA3UpHVhMC1Wbl-2xq?usp=drive_link'},
+  {id: 18, evId: 3, br: 'DS',          lk: 'https://drive.google.com/drive/folders/1d8fmtLUpWgRcZE_-sfKjhwCzgR0dxiGX?usp=drive_link'},
+  {id: 19, evId: 3, br: 'ECE',         lk: 'https://drive.google.com/drive/folders/1uuxSkl-0SQ_X7eFgb_lK9rpk-3Mz2e4v?usp=drive_link'},
+  {id: 20, evId: 3, br: 'EEE',         lk: 'https://drive.google.com/drive/folders/1UPzmvUdcz2R1Yne966oAYncKdrOcbPzC?usp=drive_link'},
+  {id: 21, evId: 3, br: 'IT',          lk: 'https://drive.google.com/drive/folders/1ySO3iHsTGV5MYtQ7RIIRjeyxqevOv0XU?usp=drive_link'},
+  {id: 22, evId: 3, br: 'MECH',         lk: 'https://drive.google.com/drive/folders/19TmX3zcvdSNVCnrWtknTddKbq9B4M82L?usp=drive_link'},
+  {id: 23, evId: 3, br: 'Volunteers',  lk: 'https://drive.google.com/drive/folders/13noyhTQIDWdA7jPcH1JR2eL7aOraK4CK?usp=drive_link'},
+  {id: 24, evId: 3, br: 'Winners',     lk: 'https://drive.google.com/drive/folders/1tzo_MYIlHDKOQ5N2zK77tav2rarISj4a?usp=drive_link'}
+  
 ];
 var ANNS=[
   {id:1,title:'Welcome to CSE - SABL Events',cont:'This portal is your one-stop destination for all CSE department events, certificates and announcements. Stay updated!',dt:'18 Feb 2026  06:00'},
